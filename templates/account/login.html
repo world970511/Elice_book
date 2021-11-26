@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container my-3">
+    <div class="row my-3">
+        <div class="col-4">
+            <h4>로그인</h4>
+        </div>
+    <form method="post" class="post-form" action="{% url 'account:login' %}">
+        {% csrf_token %}
+           {% if form.errors %}
+                {% for field in form %}
+                    {% for error in field.errors %}  <!-- 필드 오류를 출력한다. -->
+                        <div class="alert alert-danger">
+                        <strong>{{ field.label }}</strong>
+                        {{ error }}
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}   <!-- 넌필드 오류를 출력한다. -->
+                    <div class="alert alert-danger">
+                    <strong>{{ error }}</strong>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        <!--{{ form.as_p }}는 폼에 정의한 subject, content 속성에 해당하는 HTML 코드를 자동으로 생성-->
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary" value="login">로그인</button>
+    </form>
+</div>
+{% endblock %}
