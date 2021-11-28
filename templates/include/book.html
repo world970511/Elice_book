@@ -17,52 +17,34 @@
             <span class="badge badge-pill badge-dark">반납</span>
         {% endif %}
         <h4 class="media-heading">{{ book.book_name|safe }}</h4>
-        <p class="book-info">{{ book.author|safe }} | {{ book.publisher|safe }} | {{ book.publication_date|safe}} |
+        <p class="book-info">{{ book.author}} | {{ book.publisher}} | {{book.publication_date}} 출간 |
+                                    {{book.pages}}페이지 | isbn - {{book.isbn}}<br>
             <span class="text-primary">보유권수:{{book.hold}}</span><br>
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#{{book.isbn}}">정보 더보기</button>
-            <!-- Modal (id에 고유값 대입)-->
-            <div class="modal" id="{{book.isbn}}"  tabindex="-1" role="dialog" aria-hidden="true">
-                  <div class="modal-dialog modal" role="document">
-                      <div class="modal-content">
-                              <div class="modal-header">
-                                <h5 class="modal-title" >{{book.book_name}}</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                              </div>
-                              <div class="modal-body">
-                                    {{ book.author}} | {{ book.publisher}} | {{book.publication_date}} 출간 |
-                                    {{book.pages}}페이지 | isbn - {{book.isbn}}
-                                    <p><small>{{book.description}}</small></p>
-                                    <span><small><a href="{{book.link}}">추가 정보가 필요하신가요?</a></small></span>
-                              </div>
-                              <div class="modal-footer">
-                                    <!--대출신청-->
-                                    {% if type == 'list' %}
-                                        {% if book.hold > 0 %}
-                                            {% if user.email == None %}
-                                                <span><a href="{% url 'account:login' %}">로그인이 필요합니다.</a></span>
-                                            {% elif book.rent_info.user.email != user.email %}
-                                                <form action="{% url 'books:rent' book.id %}" method="post">
-                                                {% csrf_token %}
-                                                <input type="submit" class="btn btn-sm btn-success pull-right" value="대여신청">
-                                                </form>
-                                            {% elif book.rent_info.user.email == user.email %}
-                                                <span>{{ book.rent_info.user.email }}님이 이미 대출중인 책입니다.</span>
-                                            {% endif %}
-                                        {% else %}
-                                            <span>대출 불가 상태입니다.</span>
-                                        {% endif %}
-                                    {% elif type == 'mybook' %}
-                                        <form action="{% url 'books:return_book' book.id %}" method="post">
-                                        {% csrf_token %}
-                                        <button type="submit" class="btn btn-sm btn-default pull-right">반납</button>
-                                        </form>
-                                    {% endif %}
-                              </div>
-                      </div>
-                  </div>
-            </div>
+            <p><small>{{book.description}}</small></p>
+            <span><small><a href="{{book.link}}">추가 정보가 필요하신가요?</a></small></span>
+            <br>
+            <!--대출신청-->
+                {% if type == 'list' %}
+                    {% if book.hold > 0 %}
+                        {% if user.email == None %}
+                            <span><a href="{% url 'account:login' %}">로그인이 필요합니다.</a></span>
+                        {% elif book.rent_info.user.email != user.email %}
+                            <form action="{% url 'books:rent' book.id %}" method="post">
+                                {% csrf_token %}
+                                <input type="submit" class="btn btn-sm btn-success pull-right" value="대여신청">
+                            </form>
+                        {% endif %}
+                    {% elif book.rent_info.user.email == user.email %}
+                            <span style="color:#ffd400">{{ book.rent_info.user.email }}님이 이미 대출중인 책입니다.</span>
+                    {% else %}
+                        <span style="color:red">대출 불가 상태입니다.</span>
+                    {% endif %}
+                    {% elif type == 'mybook' %}
+                        <form action="{% url 'books:return_book' book.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-danger pull-right">반납</button>
+                        </form>
+                    {% endif %}
         </p>
     </div>
 </div>
