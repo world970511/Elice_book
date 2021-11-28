@@ -8,7 +8,7 @@ from .models import BookInfo,RentInfo
 class BookAdmin(admin.ModelAdmin):
     list_display = ['isbn','book_name', 'author', 'publisher', 'publication_date']
     list_display_links = ['book_name', 'author', 'publisher']
-    search_fields = ['book_name']
+    search_fields = ['isbn']
     form = BookForm
 
 @admin.register(RentInfo)

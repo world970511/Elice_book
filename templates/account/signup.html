@@ -11,22 +11,6 @@
     </div>
     <form method="post" class="post-form" action="{% url 'account:signup' %}">
         {% csrf_token %}
-        {% if form.errors %}
-                {% for field in form %}
-                    {% for error in field.errors %}  <!-- 필드 오류를 출력한다. -->
-                        <div class="alert alert-danger">
-                        <strong>{{ field.label }}</strong>
-                        {{ error }}
-                        </div>
-                    {% endfor %}
-                {% endfor %}
-                {% for error in form.non_field_errors %}   <!-- 넌필드 오류를 출력한다. -->
-                    <div class="alert alert-danger">
-                    <strong>{{ error }}</strong>
-                    </div>
-                {% endfor %}
-        {% endif %}
-
         <div class="form-group">
             <label for="email">사용자 이메일</label>
             <input type="text" class="form-control" name="email" id="email"
@@ -47,6 +31,10 @@
             <input type="text" class="form-control" name="real_name" id="real_name"
                    value="{{ form.real_name.value|default_if_none:'' }}">
         </div>
+        <!-- 에러 메시지가 있을 경우 출력 -->
+        {% if field.errors %}
+            <span style="color:red">{{field.errors}}</span>
+        {% endif %}
         <button type="submit" class="btn btn-primary">생성하기</button>
     </form>
 </div>

@@ -4,6 +4,7 @@
 {% block content %}
         <h2>도서 전체목록 (총 {{ paginator.count }}권)</h2>
         <p>대여신청을 할 수 있어요.</p>
+        <hr>
         {% if is_paginated %}
             <ul class="pagination pagination-book-list">
                 {% if page_obj.has_previous %}
